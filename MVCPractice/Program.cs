@@ -39,10 +39,10 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "GetByUserId",
-    pattern: "{controller=Home}/{action=GetById}/{userId}");
+    pattern: "{controller=Home}/{action=GetByUserId}/{userId}");
 
 app.MapControllerRoute(
-    name: "PostUserRecordPoster",
-    pattern: "{controller=Home}/{action=PostUserRecordPoster}");
+    name: "PostUserRecord",
+    pattern: "{controller=Home}/{action=PostUserRecord}");
 
 app.Run();

@@ -28,7 +28,7 @@ namespace MVCPractice.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetById(int id)
+        public IActionResult GetByUserId(int id)
         {
             ViewData["id"] = id;
             
@@ -39,6 +39,7 @@ namespace MVCPractice.Controllers
         public IActionResult PostUserRecord(string name)
         {
             recordPosterProcessor.Process(name);
+
             return View();
         }
 
