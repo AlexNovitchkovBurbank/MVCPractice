@@ -18,7 +18,7 @@ namespace MVCPractice.Processors
             this.byIdRecordGetterDatabase = byIdRecordGetterDatabase;
         }
 
-        public IDictionary<Guid, Item> Process(string idAsString)
+        public IList<Item> Process(string idAsString)
         {
             var valid = byIdRecordGetterValidator.Validate(idAsString);
 
