@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace TestMVCPractice.Processors
 {
-    internal class RecordPosterProcessorTests
+    public class RecordPosterProcessorTests
     {
         [Test]
         public void ProcessAllValid()
