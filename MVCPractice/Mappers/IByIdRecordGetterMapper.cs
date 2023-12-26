@@ -2,6 +2,6 @@
 {
     public interface IByIdRecordGetterMapper
     {
-        public Guid Map(string id);
+        public Guid Map(string idAsString);
     }
 }

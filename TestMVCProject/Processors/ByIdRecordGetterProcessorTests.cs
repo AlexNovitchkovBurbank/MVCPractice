@@ -1,7 +1,9 @@
 ﻿using Moq;
 using MVCPractice;
 using MVCPractice.Mappers;
+using MVCPractice.Models.dbContext;
 using MVCPractice.Processors;
+using MVCPractice.Utilities;
 using MVCPractice.Validators;
 using System;
 using System.Collections.Generic;
@@ -21,24 +23,40 @@ namespace TestMVCPractice.Processors
             string idAsString = guid.ToString();
             Guid idAsGuid = guid;
 
+            Guid id = Guid.NewGuid();
+
+            Item item = new Item();
+            item.Id = id;
+            item.Name = "Test";
+
+            IList<Item> records = new List<Item>
+            {
+                item
+            };
+
             Mock<IByIdRecordGetterValidator> validatorMock = new Mock<IByIdRecordGetterValidator>();
             Mock<IByIdRecordGetterMapper> mapperMock = new Mock<IByIdRecordGetterMapper>();
-            Mock<IByIdRecordGetterGetFromDatabase> databaseMock = new Mock<IByIdRecordGetterGetFromDatabase>();
+            Mock<IByIdRecordGetterGetDatabaseAccessor> databaseMock = new Mock<IByIdRecordGetterGetDatabaseAccessor>();
+            Mock<IOnIdFilterer> onIdFilterer = new Mock<IOnIdFilterer>();
 
             validatorMock.Setup(c => c.Validate(idAsString)).Returns(true);
             mapperMock.Setup(c => c.Map(idAsString)).Returns(idAsGuid);
+            databaseMock.Setup(c => c.Get()).Returns(records);
+            onIdFilterer.Setup(c => c.Filter(records, id)).Returns(records);
 
-            ByIdRecordGetterProcessor recordPosterProcessor = new ByIdRecordGetterProcessor(validatorMock.Object, mapperMock.Object, databaseMock.Object);
+            ByIdRecordGetterProcessor recordPosterProcessor = new ByIdRecordGetterProcessor(validatorMock.Object, mapperMock.Object, databaseMock.Object, onIdFilterer.Object);
 
             recordPosterProcessor.Process(idAsString);
 
             validatorMock.Verify(c => c.Validate(idAsString), Times.Once);
             mapperMock.Verify(c => c.Map(idAsString), Times.Once);
-            databaseMock.Verify(c => c.Get(idAsGuid), Times.Once);
+            databaseMock.Verify(c => c.Get(), Times.Once);
+            onIdFilterer.Verify(c => c.Filter(records, idAsGuid), Times.Once);
 
             validatorMock.VerifyNoOtherCalls();
             mapperMock.VerifyNoOtherCalls();
             databaseMock.VerifyNoOtherCalls();
+            onIdFilterer.VerifyNoOtherCalls();
         }
     }
 }

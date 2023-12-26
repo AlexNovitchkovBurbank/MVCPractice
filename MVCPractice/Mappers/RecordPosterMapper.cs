@@ -6,6 +6,9 @@ namespace MVCPractice.Mappers
     {
         public Item Map(Guid id, string name)
         {
+            if (name == null)
+                throw new ArgumentException("name cannot be null");
+
             Item item = new Item();
 
             item.Id = id;

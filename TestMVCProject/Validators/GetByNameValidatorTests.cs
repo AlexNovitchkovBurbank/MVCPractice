@@ -10,25 +10,25 @@ namespace TestMVCPractice.Validators
     public class GetByNameValidatorTests
     {
         [Test]
-        public void TestValidate_validId()
+        public void Validate_validId()
         {
-            string id = "1";
+            string idAsString = "35147448-DC42-4ADB-8B17-08DC050D8DF9";
 
             ByIdRecordGetterValidator byIdRecordGetterValidator = new ByIdRecordGetterValidator();
 
-            var result = byIdRecordGetterValidator.Validate(id);
+            var result = byIdRecordGetterValidator.Validate(idAsString);
 
             Assert.That(result, Is.EqualTo(true));
         }
 
         [Test]
-        public void TestValidate_idNotNumber()
+        public void Validate_idNotGuid()
         {
-            string id = "a";
+            string idAsString = "1";
 
             ByIdRecordGetterValidator byIdRecordGetterValidator = new ByIdRecordGetterValidator();
 
-            var result = byIdRecordGetterValidator.Validate(id);
+            var result = byIdRecordGetterValidator.Validate(idAsString);
 
             Assert.That(result, Is.EqualTo(false));
         }

@@ -1,18 +1,18 @@
-﻿using MVCPractice.Models.dbContext;
-using MVCPractice.Utilities;
+﻿using Microsoft.EntityFrameworkCore;
+using MVCPractice.Models.dbContext;
 
 namespace MVCPractice
 {
-    public class ByIdRecordGetterFromDatabase : IByIdRecordGetterGetFromDatabase
+    public class ByIdRecordGetterDatabaseAccessor : IByIdRecordGetterGetDatabaseAccessor
     {
         private readonly ItemsContext itemsContext;
 
-        public ByIdRecordGetterFromDatabase(ItemsContext itemsContext)
+        public ByIdRecordGetterDatabaseAccessor(ItemsContext itemsContext)
         {
             this.itemsContext = itemsContext;
         }
 
-        public IList<Item> Get(Guid id)
+        public IList<Item> Get()
         {
             itemsContext.Database.EnsureCreated();
 

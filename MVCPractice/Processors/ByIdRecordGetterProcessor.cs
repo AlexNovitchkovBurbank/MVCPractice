@@ -9,13 +9,15 @@ namespace MVCPractice.Processors
     {
         private IByIdRecordGetterValidator byIdRecordGetterValidator;
         private readonly IByIdRecordGetterMapper byIdRecordGetterMapper;
-        private IByIdRecordGetterGetFromDatabase byIdRecordGetterDatabase;
+        private IByIdRecordGetterGetDatabaseAccessor byIdRecordGetterGetFromDatabase;
+        private readonly IOnIdFilterer onIdFilterer;
 
-        public ByIdRecordGetterProcessor(IByIdRecordGetterValidator byIdRecordGetterValidator, IByIdRecordGetterMapper byIdRecordGetterMapper, IByIdRecordGetterGetFromDatabase byIdRecordGetterDatabase)
+        public ByIdRecordGetterProcessor(IByIdRecordGetterValidator byIdRecordGetterValidator, IByIdRecordGetterMapper byIdRecordGetterMapper, IByIdRecordGetterGetDatabaseAccessor byIdRecordGetterDatabaseAccessor, IOnIdFilterer onIdFilterer)
         {
             this.byIdRecordGetterValidator = byIdRecordGetterValidator;
             this.byIdRecordGetterMapper = byIdRecordGetterMapper;
-            this.byIdRecordGetterDatabase = byIdRecordGetterDatabase;
+            this.byIdRecordGetterGetFromDatabase = byIdRecordGetterDatabaseAccessor;
+            this.onIdFilterer = onIdFilterer;
         }
 
         public IList<Item> Process(string idAsString)
@@ -26,9 +28,10 @@ namespace MVCPractice.Processors
                 throw new Exception("id provided is not valid");
 
             var idAsGuid = byIdRecordGetterMapper.Map(idAsString);
-            var records = byIdRecordGetterDatabase.Get(idAsGuid);
+            var allRecords = byIdRecordGetterGetFromDatabase.Get();
+            var filteredRecords = onIdFilterer.Filter(allRecords, idAsGuid);
 
-            return records;
+            return filteredRecords;
         }
     }
 }

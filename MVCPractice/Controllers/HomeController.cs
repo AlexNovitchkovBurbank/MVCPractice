@@ -27,14 +27,6 @@ namespace MVCPractice.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult GetByUserId(int id)
-        {
-            ViewData["id"] = id;
-            
-            return View();
-        }
-
         [HttpPost]
         public IActionResult PostUserRecord(string name)
         {

@@ -11,7 +11,7 @@ namespace TestMVCPractice.Validators
     public class RecordPosterValidatorTests
     {
         [Test]
-        public void TestValidate_namePresent()
+        public void Validate_namePresent()
         {
             string name = "Alex";
             IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
@@ -22,7 +22,7 @@ namespace TestMVCPractice.Validators
         }
 
         [Test]
-        public void TestValidate_nameNull()
+        public void Validate_nameNull()
         {
             string name = null;
             IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
@@ -33,7 +33,7 @@ namespace TestMVCPractice.Validators
         }
 
         [Test]
-        public void TestValidate_nameEmpty()
+        public void Validate_nameEmpty()
         {
             string name = "";
             IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
@@ -44,7 +44,7 @@ namespace TestMVCPractice.Validators
         }
 
         [Test]
-        public void TestValidate_nameOnlySpaces()
+        public void Validate_nameOnlySpaces()
         {
             string name = " ";
             IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
@@ -55,7 +55,7 @@ namespace TestMVCPractice.Validators
         }
 
         [Test]
-        public void TestValidate_nameFirstCharacterNotString()
+        public void Validate_nameFirstCharacterNotString()
         {
             string name = "7";
             IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
@@ -66,7 +66,7 @@ namespace TestMVCPractice.Validators
         }
 
         [Test]
-        public void TestValidate_nameSecondCharacterNotString()
+        public void Validate_nameSecondCharacterNotString()
         {
             string name = "a7";
             IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
