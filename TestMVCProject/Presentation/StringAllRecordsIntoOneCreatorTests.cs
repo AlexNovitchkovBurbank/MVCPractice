@@ -37,7 +37,7 @@ namespace TestMVCPractice.Presentation
 
             var result = creator.Create(records);
 
-            Assert.That(result, Is.EqualTo(records[0].Id.ToString().PadRight(35) + records[0].Name));
+            Assert.That(result, Is.EqualTo(records[0].Id.ToString().PadRight(45, '\u00A0') + records[0].Name + "\n"));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace TestMVCPractice.Presentation
 
             var result = creator.Create(records);
 
-            Assert.That(result, Is.EqualTo(records[0].Id.ToString().PadRight(35) + records[0].Name + "\n" + records[1].Id.ToString().PadRight(35) + records[1].Name));
+            Assert.That(result, Is.EqualTo(records[0].Id.ToString().PadRight(45, '\u00A0') + records[0].Name + "\n" + records[1].Id.ToString().PadRight(45, '\u00A0') + records[1].Name + "\n"));
         }
     }
 }
