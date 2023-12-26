@@ -13,8 +13,8 @@ namespace TestMVCPractice.Mappers
         [Test]
         public void Map_Successful()
         {
-            string name = "Alex";
             Guid id = Guid.NewGuid();
+            string name = "Alex";
 
             IRecordPosterMapper recordPosterMapper = new RecordPosterMapper();
 
@@ -22,6 +22,19 @@ namespace TestMVCPractice.Mappers
 
             Assert.That(id, Is.EqualTo(result.Id));
             Assert.That(name, Is.EqualTo(result.Name));
+        }
+
+        [Test]
+        public void Map_NameIsNull()
+        {
+            Guid id = Guid.NewGuid();
+            string name = null;
+
+            IRecordPosterMapper recordPosterMapper = new RecordPosterMapper();
+
+            var ex = Assert.Throws<ArgumentException>(() => recordPosterMapper.Map(id, name));
+
+            Assert.That(ex.Message, Is.EqualTo("name cannot be null"));
         }
     }
 }

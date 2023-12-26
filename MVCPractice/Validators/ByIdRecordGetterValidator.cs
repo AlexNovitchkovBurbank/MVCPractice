@@ -3,9 +3,9 @@ namespace MVCPractice.Validators
 {
     public class ByIdRecordGetterValidator : IByIdRecordGetterValidator
     {
-        public bool Validate(string id)
+        public bool Validate(string idAsString)
         {
-            if (!int.TryParse(id, out int idAsNumber))
+            if (!Guid.TryParse(idAsString, out Guid idAsGuid))
                 return false;
 
             return true;

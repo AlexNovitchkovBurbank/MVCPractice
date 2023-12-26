@@ -27,18 +27,11 @@ namespace MVCPractice.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult GetById(int id)
-        {
-            ViewData["id"] = id;
-            
-            return View();
-        }
-
         [HttpPost]
         public IActionResult PostUserRecord(string name)
         {
             recordPosterProcessor.Process(name);
+
             return View();
         }
 
