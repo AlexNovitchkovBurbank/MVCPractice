@@ -18,12 +18,10 @@ namespace TestMVCPractice.Processors
         [Test]
         public void ProcessAllValid()
         {
-            Guid guid = Guid.NewGuid();
-
-            string idAsString = guid.ToString();
-            Guid idAsGuid = guid;
-
             Guid id = Guid.NewGuid();
+
+            string idAsString = id.ToString();
+            Guid idAsGuid = id;
 
             Item item = new Item();
             item.Id = id;
@@ -42,11 +40,14 @@ namespace TestMVCPractice.Processors
             validatorMock.Setup(c => c.Validate(idAsString)).Returns(true);
             mapperMock.Setup(c => c.Map(idAsString)).Returns(idAsGuid);
             databaseMock.Setup(c => c.Get()).Returns(records);
-            onIdFilterer.Setup(c => c.Filter(records, id)).Returns(records);
+            onIdFilterer.Setup(c => c.Filter(records, id)).Returns(item);
 
             ByIdRecordGetterProcessor recordPosterProcessor = new ByIdRecordGetterProcessor(validatorMock.Object, mapperMock.Object, databaseMock.Object, onIdFilterer.Object);
 
-            recordPosterProcessor.Process(idAsString);
+            var result = recordPosterProcessor.Process(idAsString);
+
+            Assert.That(result.Id, Is.EqualTo(item.Id));
+            Assert.That(result.Name, Is.EqualTo(item.Name));
 
             validatorMock.Verify(c => c.Validate(idAsString), Times.Once);
             mapperMock.Verify(c => c.Map(idAsString), Times.Once);

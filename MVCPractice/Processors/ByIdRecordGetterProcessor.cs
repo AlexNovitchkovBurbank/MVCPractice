@@ -20,7 +20,7 @@ namespace MVCPractice.Processors
             this.onIdFilterer = onIdFilterer;
         }
 
-        public IList<Item> Process(string idAsString)
+        public Item Process(string idAsString)
         {
             var valid = byIdRecordGetterValidator.Validate(idAsString);
 
@@ -29,9 +29,9 @@ namespace MVCPractice.Processors
 
             var idAsGuid = byIdRecordGetterMapper.Map(idAsString);
             var allRecords = byIdRecordGetterGetFromDatabase.Get();
-            var filteredRecords = onIdFilterer.Filter(allRecords, idAsGuid);
+            var record = onIdFilterer.Filter(allRecords, idAsGuid);
 
-            return filteredRecords;
+            return record;
         }
     }
 }

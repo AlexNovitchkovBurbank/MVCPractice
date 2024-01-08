@@ -11,7 +11,7 @@
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-NNHA2AR\SQLEXPRESS;Initial Catalog=itemsDatabase;Integrated Security=True;Pooling=False;Encrypt=True;Trust Server Certificate=True");
+                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-9CPS9TC\SQLEXPRESS;Initial Catalog=itemsDatabase;Integrated Security=True;Pooling=False;Encrypt=True;Trust Server Certificate=True");
             }
         }
 
@@ -19,7 +19,7 @@
         {
             public Item()
             {
-                Id = Guid.NewGuid();
+                Id = Guid.Empty;
                 Name = string.Empty;
             }
 

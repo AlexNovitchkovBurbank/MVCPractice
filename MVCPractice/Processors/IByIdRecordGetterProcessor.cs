@@ -4,6 +4,6 @@ namespace MVCPractice.Processors
 {
     public interface IByIdRecordGetterProcessor
     {
-        IList<Item> Process(string idAsString);
+        Item Process(string idAsString);
     }
 }

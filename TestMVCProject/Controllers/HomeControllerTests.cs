@@ -27,7 +27,7 @@ namespace TestMVCPractice.Controllers
 
             var result = homeController.PostUserRecord(name);
 
-            Assert.IsInstanceOf(typeof(ViewResult), result);
+            Assert.IsInstanceOf(typeof(OkObjectResult), result);
         }
     }
 }

@@ -19,26 +19,26 @@ namespace TestMVCPractice.Controllers
         {
             string idAsString = Guid.NewGuid().ToString();
 
-            IList<Item> records = new List<Item>();
-            string stringOfRecords = "";
+            Item record = new Item();
+            //string recordStringedOut = "";
 
             Mock<IByIdRecordGetterProcessor> recordPosterProcessorMock = new Mock<IByIdRecordGetterProcessor>();
-            Mock<IStringAllRecordsIntoOneCreator> stringAllRecordsIntoOneCreatorMock = new Mock<IStringAllRecordsIntoOneCreator>();
+            Mock<IStringRecordOutCreator> stringAllRecordsIntoOneCreatorMock = new Mock<IStringRecordOutCreator>();
 
-            recordPosterProcessorMock.Setup(c => c.Process(idAsString)).Returns(records);
-            stringAllRecordsIntoOneCreatorMock.Setup(c => c.Create(records)).Returns(stringOfRecords);
+            recordPosterProcessorMock.Setup(c => c.Process(idAsString)).Returns(record);
+            //stringAllRecordsIntoOneCreatorMock.Setup(c => c.Create(record)).Returns(recordStringedOut);
 
             ByIdRecordGetterController byIdRecordGetterController = new ByIdRecordGetterController(recordPosterProcessorMock.Object, stringAllRecordsIntoOneCreatorMock.Object);
 
             var result = byIdRecordGetterController.GetByUserId(idAsString);
 
-            Assert.IsInstanceOf(typeof(ViewResult), result);
+            Assert.IsInstanceOf(typeof(OkObjectResult), result);
 
             recordPosterProcessorMock.Verify(c => c.Process(idAsString), Times.Once);
-            stringAllRecordsIntoOneCreatorMock.Verify(c => c.Create(records), Times.Once);
+            //stringAllRecordsIntoOneCreatorMock.Verify(c => c.Create(record), Times.Once);
 
             recordPosterProcessorMock.VerifyNoOtherCalls();
-            stringAllRecordsIntoOneCreatorMock.VerifyNoOtherCalls();
+            //stringAllRecordsIntoOneCreatorMock.VerifyNoOtherCalls();
         }
     }
 }

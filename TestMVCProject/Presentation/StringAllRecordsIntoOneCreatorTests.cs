@@ -1,5 +1,6 @@
 ﻿using MVCPractice.Models.dbContext;
 using MVCPractice.Presentation;
+using NuGet.ProjectModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,12 @@ namespace TestMVCPractice.Presentation
         [Test]
         public void Create_CreateStringFromNoRecords()
         {
-            IList<Item> records = new List<Item>();
-            IStringAllRecordsIntoOneCreator creator = new StringAllRecordsIntoOneCreator();
+            Item item = new Item();
+            IStringRecordOutCreator creator = new StringRecordOutCreator();
 
-            var result = creator.Create(records);
+            var result = creator.Create(item);
 
-            Assert.That(result, Is.EqualTo(""));
+            Assert.That(result, Is.EqualTo(Guid.Empty.ToString().PadRight(45, '\u00A0') + item.Name + "\n"));
         }
 
         [Test]
@@ -28,39 +29,11 @@ namespace TestMVCPractice.Presentation
             item.Id = Guid.NewGuid();
             item.Name = "Name";
 
-            IList<Item> records = new List<Item>
-            {
-                item
-            };
+            IStringRecordOutCreator creator = new StringRecordOutCreator();
 
-            IStringAllRecordsIntoOneCreator creator = new StringAllRecordsIntoOneCreator();
+            var result = creator.Create(item);
 
-            var result = creator.Create(records);
-
-            Assert.That(result, Is.EqualTo(records[0].Id.ToString().PadRight(45, '\u00A0') + records[0].Name + "\n"));
-        }
-
-        [Test]
-        public void Create_CreateStringFrom2Records()
-        {
-            Item item1 = new Item();
-            item1.Id = Guid.NewGuid();
-            item1.Name = "Name";
-
-            Item item2 = new Item();
-            item2.Id = Guid.NewGuid();
-            item2.Name = "test";
-
-            IList<Item> records = new List<Item>
-            {
-                item1, item2
-            };
-
-            IStringAllRecordsIntoOneCreator creator = new StringAllRecordsIntoOneCreator();
-
-            var result = creator.Create(records);
-
-            Assert.That(result, Is.EqualTo(records[0].Id.ToString().PadRight(45, '\u00A0') + records[0].Name + "\n" + records[1].Id.ToString().PadRight(45, '\u00A0') + records[1].Name + "\n"));
+            Assert.That(result, Is.EqualTo(item.Id.ToString().PadRight(45, '\u00A0') + item.Name + "\n"));
         }
     }
 }

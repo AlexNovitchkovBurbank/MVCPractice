@@ -25,11 +25,23 @@ builder.Services.TryAddScoped(typeof(IByIdRecordGetterMapper), typeof(ByIdRecord
 builder.Services.TryAddScoped(typeof(IOnIdFilterer), typeof(OnIdFilterer));
 builder.Services.TryAddScoped<IByIdRecordGetterGetDatabaseAccessor>(c => new ByIdRecordGetterDatabaseAccessor(c.GetRequiredService<ItemsContext>()));
 builder.Services.TryAddScoped<IByIdRecordGetterProcessor>(c => new ByIdRecordGetterProcessor(c.GetRequiredService<IByIdRecordGetterValidator>(), c.GetRequiredService<IByIdRecordGetterMapper>(), c.GetRequiredService<IByIdRecordGetterGetDatabaseAccessor>(), c.GetRequiredService<IOnIdFilterer>()));
-builder.Services.TryAddScoped(typeof(IStringAllRecordsIntoOneCreator), typeof(StringAllRecordsIntoOneCreator));
+builder.Services.TryAddScoped(typeof(IStringRecordOutCreator), typeof(StringRecordOutCreator));
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("MyPolicy");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

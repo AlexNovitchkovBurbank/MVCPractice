@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using MVCPractice.Mappers;
@@ -32,7 +33,8 @@ namespace MVCPractice.Controllers
         {
             recordPosterProcessor.Process(name);
 
-            return View();
+            return new OkObjectResult("Successfully saved!");
+            //return View();
         }
 
         public IActionResult Privacy()

@@ -36,9 +36,10 @@ namespace TestMVCPractice.Utilities
 
             var result = onIdFilterer.Filter(records, id);
 
-            Assert.IsInstanceOf(typeof(IList<Item>), result);
+            Assert.IsInstanceOf(typeof(Item), result);
 
-            Assert.That(result.Count, Is.EqualTo(0));
+            Assert.That(result.Id, Is.EqualTo(Guid.Empty));
+            Assert.That(result.Name, Is.SameAs(string.Empty));
         }
 
         [Test]
@@ -50,20 +51,19 @@ namespace TestMVCPractice.Utilities
             item.Id = id;
             item.Name = "Test";
 
-            IList<Item> records = new List<Item>
+            IList<Item> items = new List<Item>
             {
                 item
             };
 
             IOnIdFilterer onIdFilterer = new OnIdFilterer();
 
-            var result = onIdFilterer.Filter(records, id);
+            var result = onIdFilterer.Filter(items, id);
 
-            Assert.IsInstanceOf(typeof(IList<Item>), result);
+            Assert.IsInstanceOf(typeof(Item), result);
 
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(records[0].Id, Is.EqualTo(result[0].Id));
-            Assert.That(records[0].Name, Is.EqualTo(result[0].Name));
+            Assert.That(result.Id, Is.EqualTo(item.Id));
+            Assert.That(result.Name, Is.EqualTo(item.Name));
         }
 
         [Test]
@@ -79,20 +79,19 @@ namespace TestMVCPractice.Utilities
             item2.Id = Guid.NewGuid();
             item2.Name = "Item2";
 
-            IList<Item> records = new List<Item>
+            IList<Item> items = new List<Item>
             {
                 item1, item2
             };
 
             IOnIdFilterer onIdFilterer = new OnIdFilterer();
 
-            var result = onIdFilterer.Filter(records, id);
+            var result = onIdFilterer.Filter(items, id);
 
-            Assert.IsInstanceOf(typeof(IList<Item>), result);
+            Assert.IsInstanceOf(typeof(Item), result);
 
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(records[0].Id, Is.EqualTo(result[0].Id));
-            Assert.That(records[0].Name, Is.EqualTo(result[0].Name));
+            Assert.That(result.Id, Is.EqualTo(item1.Id));
+            Assert.That(result.Name, Is.EqualTo(item1.Name));
         }
 
         [Test]
@@ -113,9 +112,10 @@ namespace TestMVCPractice.Utilities
 
             var result = onIdFilterer.Filter(records, id);
 
-            Assert.IsInstanceOf(typeof(IList<Item>), result);
+            Assert.IsInstanceOf(typeof(Item), result);
 
-            Assert.That(result.Count, Is.EqualTo(0));
+            Assert.That(result.Id, Is.EqualTo(Guid.Empty));
+            Assert.That(result.Name, Is.SameAs(string.Empty));
         }
 
         [Test]
@@ -136,13 +136,16 @@ namespace TestMVCPractice.Utilities
                 item1, item2
             };
 
+            string emptyString = string.Empty;
+
             IOnIdFilterer onIdFilterer = new OnIdFilterer();
 
             var result = onIdFilterer.Filter(records, id);
 
-            Assert.IsInstanceOf(typeof(IList<Item>), result);
+            Assert.IsInstanceOf(typeof(Item), result);
 
-            Assert.That(result.Count, Is.EqualTo(0));
+            Assert.That(result.Id, Is.EqualTo(Guid.Empty));
+            Assert.That(result.Name, Is.SameAs(string.Empty));
         }
     }
 }
