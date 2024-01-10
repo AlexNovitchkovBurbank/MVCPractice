@@ -2,6 +2,6 @@
 {
     public interface IByIdRecordGetterValidator
     {
-        public bool Validate(string idAsString);
+        public Error Validate(string idAsString);
     }
 }

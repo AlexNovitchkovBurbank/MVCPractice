@@ -32,12 +32,17 @@ namespace TestMVCPractice.Processors
                 item
             };
 
+            Error errorObject = new Error();
+
+            errorObject.Valid = true;
+            errorObject.Message = "";
+
             Mock<IByIdRecordGetterValidator> validatorMock = new Mock<IByIdRecordGetterValidator>();
             Mock<IByIdRecordGetterMapper> mapperMock = new Mock<IByIdRecordGetterMapper>();
             Mock<IByIdRecordGetterGetDatabaseAccessor> databaseMock = new Mock<IByIdRecordGetterGetDatabaseAccessor>();
             Mock<IOnIdFilterer> onIdFilterer = new Mock<IOnIdFilterer>();
 
-            validatorMock.Setup(c => c.Validate(idAsString)).Returns(true);
+            validatorMock.Setup(c => c.Validate(idAsString)).Returns(errorObject);
             mapperMock.Setup(c => c.Map(idAsString)).Returns(idAsGuid);
             databaseMock.Setup(c => c.Get()).Returns(records);
             onIdFilterer.Setup(c => c.Filter(records, id)).Returns(item);
@@ -53,6 +58,39 @@ namespace TestMVCPractice.Processors
             mapperMock.Verify(c => c.Map(idAsString), Times.Once);
             databaseMock.Verify(c => c.Get(), Times.Once);
             onIdFilterer.Verify(c => c.Filter(records, idAsGuid), Times.Once);
+
+            validatorMock.VerifyNoOtherCalls();
+            mapperMock.VerifyNoOtherCalls();
+            databaseMock.VerifyNoOtherCalls();
+            onIdFilterer.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void ProcessInvalidId()
+        {
+            var id = 1;
+
+            string idAsString = id.ToString();
+
+            Error errorObject = new Error();
+
+            errorObject.Valid = false;
+            errorObject.Message = "id is not a guid";
+
+            Mock<IByIdRecordGetterValidator> validatorMock = new Mock<IByIdRecordGetterValidator>();
+            Mock<IByIdRecordGetterMapper> mapperMock = new Mock<IByIdRecordGetterMapper>();
+            Mock<IByIdRecordGetterGetDatabaseAccessor> databaseMock = new Mock<IByIdRecordGetterGetDatabaseAccessor>();
+            Mock<IOnIdFilterer> onIdFilterer = new Mock<IOnIdFilterer>();
+
+            validatorMock.Setup(c => c.Validate(idAsString)).Returns(errorObject);
+
+            ByIdRecordGetterProcessor recordPosterProcessor = new ByIdRecordGetterProcessor(validatorMock.Object, mapperMock.Object, databaseMock.Object, onIdFilterer.Object);
+
+            var ex = Assert.Throws<Exception>(() => recordPosterProcessor.Process(idAsString));
+
+            Assert.That(ex.Message, Is.EqualTo(errorObject.Message));
+
+            validatorMock.Verify(c => c.Validate(idAsString), Times.Once);
 
             validatorMock.VerifyNoOtherCalls();
             mapperMock.VerifyNoOtherCalls();

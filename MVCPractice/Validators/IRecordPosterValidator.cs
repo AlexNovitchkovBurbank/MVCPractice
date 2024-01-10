@@ -2,6 +2,6 @@
 {
     public interface IRecordPosterValidator
     {
-        public bool Validate(string name);
+        public Error Validate(string name);
     }
 }

@@ -18,7 +18,8 @@ namespace TestMVCPractice.Validators
 
             var result = byIdRecordGetterValidator.Validate(idAsString);
 
-            Assert.That(result, Is.EqualTo(true));
+            Assert.That(result.Valid, Is.EqualTo(true));
+            Assert.That(result.Message, Is.EqualTo(""));
         }
 
         [Test]
@@ -30,7 +31,8 @@ namespace TestMVCPractice.Validators
 
             var result = byIdRecordGetterValidator.Validate(idAsString);
 
-            Assert.That(result, Is.EqualTo(false));
+            Assert.That(result.Valid, Is.EqualTo(false));
+            Assert.That(result.Message, Is.EqualTo("id is not a guid"));
         }
     }
 }

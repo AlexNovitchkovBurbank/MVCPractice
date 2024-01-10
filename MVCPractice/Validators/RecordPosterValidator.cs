@@ -4,16 +4,22 @@ namespace MVCPractice.Validators
 {
     public class RecordPosterValidator : IRecordPosterValidator
     {
-        public bool Validate(string name)
+        public Error Validate(string name)
         {
+            var error = new Error();
+
             if (string.IsNullOrWhiteSpace(name))
-                return false;
+            {
+                error.Valid = false;
+                error.Message = "name cannot be null or only have whitespace";
 
-            foreach (char character in name)
-                if (!char.IsLetter(character))
-                    return false;
+                return error;
+            }
 
-            return true;
+            error.Valid = true;
+            error.Message = "";
+
+            return error;
         }
     }
 }

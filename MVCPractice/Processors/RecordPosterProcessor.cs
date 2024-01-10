@@ -24,10 +24,10 @@ namespace MVCPractice.Processors
 
         public void Process(string name)
         {
-            var valid = recordPosterValidator.Validate(name);
+            var errorObject = recordPosterValidator.Validate(name);
 
-            if (!valid)
-                throw new Exception("name is not valid");
+            if (!errorObject.Valid)
+                throw new Exception(errorObject.Message);
 
             var id = guidCreator.Create();
             var item = recordPosterMapper.Map(id, name);

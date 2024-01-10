@@ -1,4 +1,5 @@
 ﻿using Moq;
+using MVCPractice;
 using MVCPractice.Mappers;
 using MVCPractice.Models.dbContext;
 using MVCPractice.Processors;
@@ -26,12 +27,16 @@ namespace TestMVCPractice.Processors
             item.Id = id;
             item.Name = "Alex";
 
+            Error error = new Error();
+            error.Valid = true;
+            error.Message = "";
+
             Mock<IRecordPosterValidator> validatorMock = new Mock<IRecordPosterValidator>();
             Mock<IGuidCreator> guidCreatorMock = new Mock<IGuidCreator>();
             Mock<IRecordPosterMapper> mapperMock = new Mock<IRecordPosterMapper>();
             Mock<IRecordPosterStorer> storerMock = new Mock<IRecordPosterStorer>();
 
-            validatorMock.Setup(c => c.Validate(name)).Returns(true);
+            validatorMock.Setup(c => c.Validate(name)).Returns(error);
             guidCreatorMock.Setup(c => c.Create()).Returns(id);
             mapperMock.Setup(c => c.Map(id, name)).Returns(item);
             storerMock.Setup(c => c.Store(item));
@@ -59,18 +64,22 @@ namespace TestMVCPractice.Processors
             item.Id = Guid.NewGuid();
             item.Name = "Alex";
 
+            Error error = new Error();
+            error.Valid = false;
+            error.Message = "name cannot be null or only have whitespace";
+
             Mock<IRecordPosterValidator> validatorMock = new Mock<IRecordPosterValidator>();
             Mock<IGuidCreator> guidCreatorMock = new Mock<IGuidCreator>();
             Mock<IRecordPosterMapper> mapperMock = new Mock<IRecordPosterMapper>();
             Mock<IRecordPosterStorer> storerMock = new Mock<IRecordPosterStorer>();
 
-            validatorMock.Setup(c => c.Validate(name)).Returns(false);
+            validatorMock.Setup(c => c.Validate(name)).Returns(error);
 
             IRecordPosterProcessor recordPosterProcessor = new RecordPosterProcessor(validatorMock.Object, guidCreatorMock.Object, mapperMock.Object, storerMock.Object);
 
             var ex = Assert.Throws<Exception>(() => recordPosterProcessor.Process(pathWithName));
 
-            Assert.That(ex.Message, Is.EqualTo("name is not valid"));
+            Assert.That(ex.Message, Is.EqualTo(error.Message));
 
             validatorMock.Verify(c => c.Validate(name), Times.Once);
 

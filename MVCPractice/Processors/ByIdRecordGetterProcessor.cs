@@ -22,10 +22,10 @@ namespace MVCPractice.Processors
 
         public Item Process(string idAsString)
         {
-            var valid = byIdRecordGetterValidator.Validate(idAsString);
+            var errorObject = byIdRecordGetterValidator.Validate(idAsString);
 
-            if (!valid)
-                throw new Exception("id provided is not valid");
+            if (!errorObject.Valid)
+                throw new Exception(errorObject.Message);
 
             var idAsGuid = byIdRecordGetterMapper.Map(idAsString);
             var allRecords = byIdRecordGetterGetFromDatabase.Get();

@@ -18,7 +18,8 @@ namespace TestMVCPractice.Validators
 
             var result = recordPosterValidator.Validate(name);
 
-            Assert.That(result, Is.EqualTo(true));
+            Assert.That(result.Valid, Is.EqualTo(true));
+            Assert.That(result.Message, Is.EqualTo(""));
         }
 
         [Test]
@@ -29,7 +30,8 @@ namespace TestMVCPractice.Validators
 
             var result = recordPosterValidator.Validate(name);
 
-            Assert.That(result, Is.EqualTo(false));
+            Assert.That(result.Valid, Is.EqualTo(false));
+            Assert.That(result.Message, Is.EqualTo("name cannot be null or only have whitespace"));
         }
 
         [Test]
@@ -40,7 +42,8 @@ namespace TestMVCPractice.Validators
 
             var result = recordPosterValidator.Validate(name);
 
-            Assert.That(result, Is.EqualTo(false));
+            Assert.That(result.Valid, Is.EqualTo(false));
+            Assert.That(result.Message, Is.EqualTo("name cannot be null or only have whitespace"));
         }
 
         [Test]
@@ -51,29 +54,8 @@ namespace TestMVCPractice.Validators
 
             var result = recordPosterValidator.Validate(name);
 
-            Assert.That(result, Is.EqualTo(false));
-        }
-
-        [Test]
-        public void Validate_nameFirstCharacterNotString()
-        {
-            string name = "7";
-            IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
-
-            var result = recordPosterValidator.Validate(name);
-
-            Assert.That(result, Is.EqualTo(false));
-        }
-
-        [Test]
-        public void Validate_nameSecondCharacterNotString()
-        {
-            string name = "a7";
-            IRecordPosterValidator recordPosterValidator = new RecordPosterValidator();
-
-            var result = recordPosterValidator.Validate(name);
-
-            Assert.That(result, Is.EqualTo(false));
+            Assert.That(result.Valid, Is.EqualTo(false));
+            Assert.That(result.Message, Is.EqualTo("name cannot be null or only have whitespace"));
         }
     }
 }

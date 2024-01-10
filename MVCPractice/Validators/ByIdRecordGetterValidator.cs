@@ -1,14 +1,23 @@
-﻿
-namespace MVCPractice.Validators
+﻿namespace MVCPractice.Validators
 {
     public class ByIdRecordGetterValidator : IByIdRecordGetterValidator
     {
-        public bool Validate(string idAsString)
+        public Error Validate(string idAsString)
         {
-            if (!Guid.TryParse(idAsString, out Guid idAsGuid))
-                return false;
+            var error = new Error();
 
-            return true;
+            if (!Guid.TryParse(idAsString, out Guid idAsGuid))
+            {
+                error.Valid = false;
+                error.Message = "id is not a guid";
+
+                return error;
+            }
+            
+            error.Valid = true;
+            error.Message = "";
+
+            return error;
         }
     }
 }

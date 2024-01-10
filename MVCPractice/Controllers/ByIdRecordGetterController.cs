@@ -2,6 +2,7 @@
 using MVCPractice.Models.dbContext;
 using MVCPractice.Presentation;
 using MVCPractice.Processors;
+using System.Security.Cryptography.Pkcs;
 
 namespace MVCPractice.Controllers
 {
@@ -24,10 +25,18 @@ namespace MVCPractice.Controllers
         [HttpGet]
         public IActionResult GetByUserId(string userIdGuid)
         {
-            var records = byIdRecordGetterProcessor.Process(userIdGuid);
+            Item record = new Item();
 
-            return new OkObjectResult(Json(records));
+            try
+            {
+                record = byIdRecordGetterProcessor.Process(userIdGuid);
+            }
+            catch (Exception ex)
+            {
+                return new OkObjectResult(Json(ex.Message));
+            }
 
+            return new OkObjectResult(Json(record));
             //var recordsAsAString = stringAllRecordsIntoOneCreator.Create(records);
 
             //ViewData["recordsAsAString"] = recordsAsAString;

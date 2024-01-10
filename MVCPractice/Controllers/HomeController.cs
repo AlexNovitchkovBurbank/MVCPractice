@@ -31,9 +31,17 @@ namespace MVCPractice.Controllers
         [HttpPost]
         public IActionResult PostUserRecord(string name)
         {
-            recordPosterProcessor.Process(name);
+            try
+            {
+                recordPosterProcessor.Process(name);
+            }
+            catch (Exception ex)
+            {
+                return new OkObjectResult(Json(ex.Message));
+            }
 
-            return new OkObjectResult("Successfully saved!");
+            return new OkObjectResult(Json("Successfully saved!"));
+
             //return View();
         }
 
