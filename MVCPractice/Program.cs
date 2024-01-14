@@ -15,10 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.TryAddScoped(typeof(ILogger<HomeController>), typeof(Logger<HomeController>));
 builder.Services.TryAddScoped(typeof(ItemsContext), typeof(ItemsContext));
 builder.Services.TryAddScoped(typeof(IRecordPosterValidator), typeof(RecordPosterValidator));
-builder.Services.TryAddScoped(typeof(IGuidCreator), typeof(GuidCreator));
+builder.Services.TryAddScoped(typeof(IStringToGuidConverter), typeof(StringToGuidConverter));
 builder.Services.TryAddScoped(typeof(IRecordPosterMapper), typeof(RecordPosterMapper));
 builder.Services.TryAddScoped<IRecordPosterStorer>(c => new RecordPosterStorer(c.GetRequiredService<ItemsContext>()));
-builder.Services.TryAddScoped<IRecordPosterProcessor>(c => new RecordPosterProcessor(c.GetRequiredService<IRecordPosterValidator>(), c.GetRequiredService<IGuidCreator>(), c.GetRequiredService<IRecordPosterMapper>(), c.GetRequiredService<IRecordPosterStorer>()));
+builder.Services.TryAddScoped<IRecordPosterProcessor>(c => new RecordPosterProcessor(c.GetRequiredService<IRecordPosterValidator>(), c.GetRequiredService<IStringToGuidConverter>(), c.GetRequiredService<IRecordPosterMapper>(), c.GetRequiredService<IRecordPosterStorer>()));
 
 builder.Services.TryAddScoped(typeof(IByIdRecordGetterValidator), typeof(ByIdRecordGetterValidator));
 builder.Services.TryAddScoped(typeof(IByIdRecordGetterMapper), typeof(ByIdRecordGetterMapper));

@@ -2,6 +2,7 @@
 {
     public interface IRecordPosterValidator
     {
-        public Error Validate(string name);
+        public Error ValidateId(string idAsString);
+        public Error ValidateName(string name);
     }
 }

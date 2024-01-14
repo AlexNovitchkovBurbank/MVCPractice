@@ -4,6 +4,6 @@ namespace MVCPractice.Processors
 {
     public interface IRecordPosterProcessor
     {
-        public void Process(string name);
+        public void Process(string idAsString, string name);
     }
 }

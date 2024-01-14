@@ -29,11 +29,11 @@ namespace MVCPractice.Controllers
         }
 
         [HttpPost]
-        public IActionResult PostUserRecord(string name)
+        public IActionResult PostUserRecord(string guidIdAsString, string name)
         {
             try
             {
-                recordPosterProcessor.Process(name);
+                recordPosterProcessor.Process(guidIdAsString, name);
             }
             catch (Exception ex)
             {

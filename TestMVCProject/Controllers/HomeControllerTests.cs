@@ -19,17 +19,18 @@ namespace TestMVCPractice.Controllers
         public void PostUserRecord_NoExceptions()
         {
             string name = "Alex";
+            string guidIdAsString = Guid.NewGuid().ToString();
 
             Mock<ILogger<HomeController>> loggerMock = new Mock<ILogger<HomeController>>();
             Mock<IRecordPosterProcessor> recordPosterProcessorMock = new Mock<IRecordPosterProcessor>();
 
             Microsoft.AspNetCore.Mvc.JsonResult nameInJsonResult = new Microsoft.AspNetCore.Mvc.JsonResult("Successfully saved!");
 
-            recordPosterProcessorMock.Setup(c => c.Process(name));
+            recordPosterProcessorMock.Setup(c => c.Process(guidIdAsString, name));
 
             HomeController homeController = new HomeController(loggerMock.Object, recordPosterProcessorMock.Object);
 
-            var result = homeController.PostUserRecord(name);
+            var result = homeController.PostUserRecord(guidIdAsString, name);
 
             Assert.IsInstanceOf(typeof(OkObjectResult), result);
 
@@ -43,7 +44,7 @@ namespace TestMVCPractice.Controllers
 
             Assert.That(actualJsonResult.Value, Is.EqualTo(nameInJsonResult.Value));
 
-            recordPosterProcessorMock.Verify(c => c.Process(name), Times.Once);
+            recordPosterProcessorMock.Verify(c => c.Process(guidIdAsString, name), Times.Once);
 
             recordPosterProcessorMock.VerifyNoOtherCalls();
         }
@@ -52,17 +53,18 @@ namespace TestMVCPractice.Controllers
         public void PostUserRecord_Exception()
         {
             string name = "  ";
+            string guidIdAsString = Guid.NewGuid().ToString();
 
             Mock<ILogger<HomeController>> loggerMock = new Mock<ILogger<HomeController>>();
             Mock<IRecordPosterProcessor> recordPosterProcessorMock = new Mock<IRecordPosterProcessor>();
 
             Microsoft.AspNetCore.Mvc.JsonResult nameInJsonResult = new Microsoft.AspNetCore.Mvc.JsonResult("name cannot be null or only have whitespace");
 
-            recordPosterProcessorMock.Setup(c => c.Process(name)).Throws(new Exception("name cannot be null or only have whitespace"));
+            recordPosterProcessorMock.Setup(c => c.Process(guidIdAsString, name)).Throws(new Exception("name cannot be null or only have whitespace"));
 
             HomeController homeController = new HomeController(loggerMock.Object, recordPosterProcessorMock.Object);
 
-            var result = homeController.PostUserRecord(name);
+            var result = homeController.PostUserRecord(guidIdAsString, name);
 
             Assert.IsInstanceOf(typeof(OkObjectResult), result);
 
@@ -76,7 +78,7 @@ namespace TestMVCPractice.Controllers
 
             Assert.That(actualJsonResult.Value, Is.EqualTo(nameInJsonResult.Value));
 
-            recordPosterProcessorMock.Verify(c => c.Process(name), Times.Once);
+            recordPosterProcessorMock.Verify(c => c.Process(guidIdAsString, name), Times.Once);
 
             recordPosterProcessorMock.VerifyNoOtherCalls();
         }

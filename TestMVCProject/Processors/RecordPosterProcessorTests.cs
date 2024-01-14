@@ -23,65 +23,107 @@ namespace TestMVCPractice.Processors
 
             Guid id = Guid.NewGuid();
 
+            var idAsString = id.ToString();
+
             Item item = new Item();
             item.Id = id;
-            item.Name = "Alex";
+            item.Name = name;
 
-            Error error = new Error();
-            error.Valid = true;
-            error.Message = "";
+            Error errorObjectForId = new Error();
+            errorObjectForId.Valid = true;
+            errorObjectForId.Message = "";
+
+            Error errorObjectForName = new Error();
+            errorObjectForName.Valid = true;
+            errorObjectForName.Message = "";
 
             Mock<IRecordPosterValidator> validatorMock = new Mock<IRecordPosterValidator>();
-            Mock<IGuidCreator> guidCreatorMock = new Mock<IGuidCreator>();
+            Mock<IStringToGuidConverter> convertersMock = new Mock<IStringToGuidConverter>();
             Mock<IRecordPosterMapper> mapperMock = new Mock<IRecordPosterMapper>();
             Mock<IRecordPosterStorer> storerMock = new Mock<IRecordPosterStorer>();
 
-            validatorMock.Setup(c => c.Validate(name)).Returns(error);
-            guidCreatorMock.Setup(c => c.Create()).Returns(id);
+            validatorMock.Setup(c => c.ValidateName(name)).Returns(errorObjectForName);
+            validatorMock.Setup(c => c.ValidateId(idAsString)).Returns(errorObjectForId);
+            convertersMock.Setup(c => c.Convert(idAsString)).Returns(id);
             mapperMock.Setup(c => c.Map(id, name)).Returns(item);
             storerMock.Setup(c => c.Store(item));
 
-            IRecordPosterProcessor recordPosterProcessor = new RecordPosterProcessor(validatorMock.Object, guidCreatorMock.Object, mapperMock.Object, storerMock.Object);
+            IRecordPosterProcessor recordPosterProcessor = new RecordPosterProcessor(validatorMock.Object, convertersMock.Object, mapperMock.Object, storerMock.Object);
 
-            recordPosterProcessor.Process(name);
+            recordPosterProcessor.Process(idAsString, name);
 
-            validatorMock.Verify(c => c.Validate(name), Times.Once);
+            validatorMock.Verify(c => c.ValidateId(idAsString), Times.Once);
+            validatorMock.Verify(c => c.ValidateName(name), Times.Once);
+            convertersMock.Verify(c => c.Convert(idAsString), Times.Once);
             mapperMock.Verify(c => c.Map(id, name), Times.Once);
             storerMock.Verify(c => c.Store(item), Times.Once);
 
             validatorMock.VerifyNoOtherCalls();
+            convertersMock.VerifyNoOtherCalls();
             mapperMock.VerifyNoOtherCalls();
             storerMock.VerifyNoOtherCalls();
         }
 
         [Test]
-        public void ProcessInvalidName()
+        public void ProcessInvalidId()
         {
-            string pathWithName = "/Alex";
-            string name = "/Alex";
+            string name = "Alex";
+            var idAsString = "1";
 
-            Item item = new Item();
-            item.Id = Guid.NewGuid();
-            item.Name = "Alex";
-
-            Error error = new Error();
-            error.Valid = false;
-            error.Message = "name cannot be null or only have whitespace";
+            Error errorObjectForId = new Error();
+            errorObjectForId.Valid = false;
+            errorObjectForId.Message = "id must be a guid";
 
             Mock<IRecordPosterValidator> validatorMock = new Mock<IRecordPosterValidator>();
-            Mock<IGuidCreator> guidCreatorMock = new Mock<IGuidCreator>();
+            Mock<IStringToGuidConverter> convertersMock = new Mock<IStringToGuidConverter>();
             Mock<IRecordPosterMapper> mapperMock = new Mock<IRecordPosterMapper>();
             Mock<IRecordPosterStorer> storerMock = new Mock<IRecordPosterStorer>();
 
-            validatorMock.Setup(c => c.Validate(name)).Returns(error);
+            validatorMock.Setup(c => c.ValidateId(idAsString)).Returns(errorObjectForId);
 
-            IRecordPosterProcessor recordPosterProcessor = new RecordPosterProcessor(validatorMock.Object, guidCreatorMock.Object, mapperMock.Object, storerMock.Object);
+            IRecordPosterProcessor recordPosterProcessor = new RecordPosterProcessor(validatorMock.Object, convertersMock.Object, mapperMock.Object, storerMock.Object);
 
-            var ex = Assert.Throws<Exception>(() => recordPosterProcessor.Process(pathWithName));
+            var ex = Assert.Throws<Exception>(() => recordPosterProcessor.Process(idAsString, name));
 
-            Assert.That(ex.Message, Is.EqualTo(error.Message));
+            Assert.That(ex.Message, Is.EqualTo(errorObjectForId.Message));
 
-            validatorMock.Verify(c => c.Validate(name), Times.Once);
+            validatorMock.Verify(c => c.ValidateId(idAsString), Times.Once);
+
+            validatorMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void ProcessInvalidName()
+        {
+            string name = "";
+
+            var id = Guid.NewGuid();
+            var idAsString = id.ToString();
+
+            Error errorObjectForId = new Error();
+            errorObjectForId.Valid = true;
+            errorObjectForId.Message = "";
+
+            Error errorObjectForName = new Error();
+            errorObjectForName.Valid = false;
+            errorObjectForName.Message = "name cannot be null or only have whitespace";
+
+            Mock<IRecordPosterValidator> validatorMock = new Mock<IRecordPosterValidator>();
+            Mock<IStringToGuidConverter> convertersMock = new Mock<IStringToGuidConverter>();
+            Mock<IRecordPosterMapper> mapperMock = new Mock<IRecordPosterMapper>();
+            Mock<IRecordPosterStorer> storerMock = new Mock<IRecordPosterStorer>();
+
+            validatorMock.Setup(c => c.ValidateId(idAsString)).Returns(errorObjectForId);
+            validatorMock.Setup(c => c.ValidateName(name)).Returns(errorObjectForName);
+
+            IRecordPosterProcessor recordPosterProcessor = new RecordPosterProcessor(validatorMock.Object, convertersMock.Object, mapperMock.Object, storerMock.Object);
+
+            var ex = Assert.Throws<Exception>(() => recordPosterProcessor.Process(idAsString, name));
+
+            Assert.That(ex.Message, Is.EqualTo(errorObjectForName.Message));
+
+            validatorMock.Verify(c => c.ValidateId(idAsString), Times.Once);
+            validatorMock.Verify(c => c.ValidateName(name), Times.Once);
 
             validatorMock.VerifyNoOtherCalls();
         }
